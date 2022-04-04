@@ -78,16 +78,16 @@ end_for_all:
 string_length:
 
 	lb $t1, 0($a0)									# Load the first byte on adress $a0 to $t1
-	beq $t1, $zero, end_string
-	addi $v0, $v0, 1
-	addi $a0, $a0, 1
+	beq $t1, $zero, end_string			# If there is $zero loaded in $t1 (the end of the null terminated str), branch to end
+	addi $v0, $v0, 1								# Add a one to the return value
+	addi $a0, $a0, 1								# Move adress to the next letter
 
-	j string_length
+	j string_length									# Continue loop
 
 end_string:
 
-	addi $v0, $v0, -4
-	jr	$ra
+	addi $v0, $v0, -4								# Remove 4 from return value, because $v0 gets initiated as 4 in main
+	jr	$ra													#
 
 ##############################################################################
 #
