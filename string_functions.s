@@ -135,7 +135,7 @@ end_for_each:
 to_upper:
 
     lb $t1, 0($a0)								# Loads the first character of the string
-    bge $t1, 97, and_check 				# if the character is equal or larger than 97
+    bge $t1, 97, and_check 				# if the character is equal or larger than 97, jump to the label and_check
     jr $ra 												# return to caller
 
 and_check:
