@@ -134,20 +134,20 @@ end_for_each:
 ##############################################################################
 to_upper:
 
-    lb $t1, 0($a0)
-    bge $t1, 97, and_check 				# OM LOWERCASE
-    jr $ra
+    lb $t1, 0($a0)								# Loads the first character of the string
+    bge $t1, 97, and_check 				# if the character is equal or larger than 97
+    jr $ra 												# return to caller
 
 and_check:
 
-		ble $t1, 122, convert_case
-		jr $ra
+		ble $t1, 122, convert_case 	  # if the character is equal or less than 122 (Meaning that the character is a lowercase letter)
+		jr $ra												# return to caller
 
 convert_case:
 
-    addi $t1, $t1, -32
-    sb $t1 0($a0)
-    jr $ra
+    addi $t1, $t1, -32		# subtracts the characters binary representation with 32 to get its upper case character
+    sb $t1 0($a0)					# stores the new uppercase character in the correct address
+    jr $ra 								# return to caller
 
 ##############################################################################
 #
