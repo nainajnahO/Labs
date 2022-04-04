@@ -140,7 +140,7 @@ to_upper:
 
 and_check:
 
-		ble $t1, 122, convert_case 	  # if the character is equal or less than 122 (Meaning that the character is a lowercase letter)
+		ble $t1, 122, convert_case 	  # if the character is equal or less than 122, jump to the label convert_case (Meaning that the character is a lowercase letter)
 		jr $ra												# return to caller
 
 convert_case:
@@ -158,8 +158,8 @@ convert_case:
 
 reverse_string:
 
-		addi	$sp, $sp, -4
-		add $t0, $a1, $zero
+		addi	$sp, $sp, -4  	# Moves the stack pointer down 4 bytes in memory
+		add $t0, $a1, $zero   #
 		add $t2, $sp, $zero
 		add $t6, $a1, $zero
 
