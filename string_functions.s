@@ -104,26 +104,26 @@ end_string:
 ##############################################################################
 string_for_each:
 
-	addi	$sp, $sp, -4		# PUSH return address to caller
-	sw	$ra, 0($sp)
-
-	add $s1, $a0, $zero
+	addi	$sp, $sp, -4								# PUSH return address to caller
+	sw	$ra, 0($sp)										#
+	add $s1, $a0, $zero								#	Loads adress of str into $s1
 
 
 loop:
-	add $a0, $s1, $zero
-	lb $s0, 0($a0)
-	beq $s0, $zero, end_for_each
-	addi $s1, $s1, 1
-	jal $a1
 
-	j loop
+	add $a0, $s1, $zero								# Loads $s1 into $a1, because it gets modified in later code
+	lb $s0, 0($a0)										#	Loads the letter at position $a0 into $s0
+	beq $s0, $zero, end_for_each			#	If there is $zero loaded in $s0 (the end of the null terminated str), branch to end
+	addi $s1, $s1, 1									#	Move to next letter
+	jal $a1														# Calling function that prints ascii value
+
+	j loop														# Return to loop
 
 end_for_each:
 
-	lw	$ra, 0($sp)		# Pop return address to caller
-	addi	$sp, $sp, 4
-	jr	$ra
+	lw	$ra, 0($sp)										# Pop return address to caller
+	addi	$sp, $sp, 4									#
+	jr	$ra														#
 
 ##############################################################################
 #
@@ -135,7 +135,7 @@ end_for_each:
 to_upper:
 
     lb $t1, 0($a0)
-    bge $t1, 97, and_check # OM LOWERCASE
+    bge $t1, 97, and_check 				# OM LOWERCASE
     jr $ra
 
 and_check:
@@ -151,12 +151,14 @@ convert_case:
 
 ##############################################################################
 #
-# Reverse_string subroutine
-# a1 is adress for test string
+# 			Reverse_string subroutine
+# 			a1 is adress for test string
+#
 ##############################################################################
 
 reverse_string:
 
+		addi	$sp, $sp, -4
 		add $t0, $a1, $zero
 		add $t2, $sp, $zero
 		add $t6, $a1, $zero
@@ -183,6 +185,7 @@ pop_stack:
 
 reverse_end:
 
+		addi	$sp, $sp, 4
 		jr $ra
 
 
@@ -300,17 +303,22 @@ main:
 	la	$a0, STR_str
 	jal	print_test_string
 
-	la	$a0, STR_reverse_string
+	##
+	### reverse_string(string)
+	##
+
+	la	$a0, STR_reverse_string  						# Prints a string to the terminal
 	syscall
 
-	la	$a1, STR_str
-	jal reverse_string
+	la	$a1, STR_str												# Loads test string into $a1
+	jal reverse_string											# Calls the function
 
 
-	add $a0, $t6, $zero
-	jal print_test_string
 
-	lw	$ra, 0($sp)	# POP return address
+	la	$a0, STR_str												# Loads adress of STR_str into $a0
+	jal print_test_string										# Calls the function
+
+	lw	$ra, 0($sp)													# POP return address
 	addi	$sp, $sp, 4
 
 	jr	$ra
