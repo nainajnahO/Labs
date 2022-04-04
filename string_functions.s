@@ -40,37 +40,28 @@ integer_array_sum:
 DBG:	##### DEBUGG BREAKPOINT ######
 
   addi    $v0, $zero, 0           # Initialize Sum to zero.
-	add	$t0, $zero, $zero	# Initialize array index i to zero.
+	add	$t0, $zero, $zero						# Initialize array index i to zero.
 
 
 for_all_in_array:
 
 	#### Append a MIPS-instruktion before each of these comments
 
-	# Done if i == N
-	beq $t0, $a1, end_for_all
+	beq $t0, $a1, end_for_all  			# Done if i == N
 
-	# 4*i
-	sll $t7, $t0, 2
 
-	# address = ARRAY + 4*i
-	add $t5, $a0, $t7
+	sll $t7, $t0, 2									# 4*i
+	add $t5, $a0, $t7								# address = ARRAY + 4*i
+	lw $t6, 0($t5)									# n = A[i]
+	add $v0, $v0, $t6								# Sum = Sum + n
+	addi $t0, $t0, 1								# i++
 
-	# n = A[i]
-	lw $t6, 0($t5)
 
-       	# Sum = Sum + n
-	add $v0, $v0, $t6
-
-        # i++
-	addi $t0, $t0, 1
-
-  	# next element
-	j for_all_in_array
+	j for_all_in_array							# next element
 
 end_for_all:
 
-	jr	$ra			# Return to caller.
+	jr	$ra													# Return to caller.
 
 ##############################################################################
 #
@@ -86,7 +77,7 @@ end_for_all:
 
 string_length:
 
-	lb $t1, 0($a0)
+	lb $t1, 0($a0)									# Load the first byte on adress $a0 to $t1
 	beq $t1, $zero, end_string
 	addi $v0, $v0, 1
 	addi $a0, $a0, 1
@@ -145,13 +136,11 @@ to_upper:
 
     lb $t1, 0($a0)
     bge $t1, 97, and_check # OM LOWERCASE
-    sb $t1 0($a0)
     jr $ra
 
 and_check:
 
 		ble $t1, 122, convert_case
-		sb $t1 0($a0)
 		jr $ra
 
 convert_case:
