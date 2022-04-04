@@ -159,34 +159,34 @@ convert_case:
 reverse_string:
 
 		addi	$sp, $sp, -4  	# Moves the stack pointer down 4 bytes in memory
-		add $t0, $a1, $zero   #
-		add $t2, $sp, $zero
-		add $t6, $a1, $zero
+		add $t0, $a1, $zero   # stores the address of the first character of the string in $t0
+		add $t2, $sp, $zero   # stores the value of the stack pointer that's pointing at the first character of the string in to $t2
+		add $t6, $a1, $zero   # stores the address of the first character of the string in $t6
 
 insert:
 
-		lb $t1, 0($a1)
-		beq $t1, $zero, pop_stack
-		addi $sp, $sp, -1
-		sb $t1, 0($sp)
-		addi $a1, $a1, 1
+		lb $t1, 0($a1)  						# loads the character from the given address in to $t1
+		beq $t1, $zero, pop_stack   # if $t1 is equal to $zero, jump to the label pop_stack (if the string has reached its end (NULL))
+		addi $sp, $sp, -1   				# moves the stack pointer down one byte in the memory
+		sb $t1, 0($sp) 							# stores the character in the stack memory where the stack pointer is pointing at
+		addi $a1, $a1, 1						# Increment the address of the string by one byte (Moves to the next character in the string)
 
-		j insert
+		j insert										# Jump to the label insert
 
 pop_stack:
 
-		beq $t2, $sp, reverse_end
-		lb $t4, 0($sp)
-		sb $t4, 0($t0)
-		addi $sp, $sp, 1
-		addi $t0, $t0, 1
+		beq $t2, $sp, reverse_end   # if the current character has the same address as $t2, jump to the label reverse_end ($sp is then pointing at the bottom of the stack)
+		lb $t4, 0($sp)						  # loads the character that the stack pointer is pointing at in to $t4
+		sb $t4, 0($t0)							# stores the character in $t4 in to the memory address $t0
+		addi $sp, $sp, 1						# moves the stack pointer one byte
+		addi $t0, $t0, 1						# increases the memory address by one byte
 
-		j pop_stack
+		j pop_stack									# jumpts to the label reverse_end
 
 reverse_end:
 
-		addi	$sp, $sp, 4
-		jr $ra
+		addi	$sp, $sp, 4		# moves the stack pointer up 4 bytes in the memory
+		jr $ra 							# return to caller
 
 
 
