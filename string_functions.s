@@ -40,21 +40,21 @@ integer_array_sum:
 DBG:	##### DEBUGG BREAKPOINT ######
 
   addi    $v0, $zero, 0           # Initialize Sum to zero.
-	add	$t0, $zero, $zero						# Initialize array index i to zero.
+	add	$s0, $zero, $zero						# Initialize array index i to zero.
 
 
 for_all_in_array:
 
 	#### Append a MIPS-instruktion before each of these comments
 
-	beq $t0, $a1, end_for_all  			# Done if i == N
+	beq $s0, $a1, end_for_all  			# Done if i == N
 
 
-	sll $t7, $t0, 2									# 4*i
-	add $t5, $a0, $t7								# address = ARRAY + 4*i
-	lw $t6, 0($t5)									# n = A[i]
-	add $v0, $v0, $t6								# Sum = Sum + n
-	addi $t0, $t0, 1								# i++
+	sll $s7, $s0, 2									# 4*i
+	add $s5, $a0, $s7								# address = ARRAY + 4*i
+	lw $s6, 0($s5)									# n = A[i]
+	add $v0, $v0, $s6								# Sum = Sum + n
+	addi $s0, $s0, 1								# i++
 
 
 	j for_all_in_array							# next element
@@ -77,8 +77,8 @@ end_for_all:
 
 string_length:
 
-	lb $t1, 0($a0)									# Load the first byte on adress $a0 to $t1
-	beq $t1, $zero, end_string			# If there is $zero loaded in $t1 (the end of the null terminated str), branch to end
+	lb $s1, 0($a0)									# Load the first byte on adress $a0 to $s1
+	beq $s1, $zero, end_string			# If there is $zero loaded in $s1 (the end of the null terminated str), branch to end
 	addi $v0, $v0, 1								# Add a one to the return value
 	addi $a0, $a0, 1								# Move adress to the next letter
 
@@ -132,54 +132,55 @@ end_for_each:
 #        INPUT: $a0 - address of a character
 #
 ##############################################################################
+
 to_upper:
 
-    lb $t1, 0($a0)								# Loads the first character of the string
-    bge $t1, 97, and_check 				# if the character is equal or larger than 97, jump to the label and_check
+    lb $s2, 0($a0)								# Loads the first character of the string
+    bge $s2, 97, and_check 				# if the character is equal or larger than 97, jump to the label and_check
     jr $ra 												# return to caller
 
 and_check:
 
-		ble $t1, 122, convert_case 	  # if the character is equal or less than 122, jump to the label convert_case (Meaning that the character is a lowercase letter)
+		ble $s2, 122, convert_case 	  # if the character is equal or less than 122, jump to the label convert_case (Meaning that the character is a lowercase letter)
 		jr $ra												# return to caller
 
 convert_case:
 
-    addi $t1, $t1, -32		# subtracts the characters binary representation with 32 to get its upper case character
-    sb $t1 0($a0)					# stores the new uppercase character in the correct address
+    addi $s2, $s2, -32		# subtracts the characters binary representation with 32 to get its upper case character
+    sb $s2 0($a0)					# stores the new uppercase character in the correct address
     jr $ra 								# return to caller
 
 ##############################################################################
 #
-# 			Reverse_string subroutine
-# 			a1 is adress for test string
+# 		DESCRIPTION: Reverses a given string
+# 			INPUT: $a1 - address for test string
 #
 ##############################################################################
 
 reverse_string:
 
 		addi	$sp, $sp, -4  	# Moves the stack pointer down 4 bytes in memory
-		add $t0, $a1, $zero   # stores the address of the first character of the string in $t0
-		add $t2, $sp, $zero   # stores the value of the stack pointer that's pointing at the first character of the string in to $t2
+		add $s0, $a1, $zero   # stores the address of the first character of the string in $t0
+		add $s2, $sp, $zero   # stores the value of the stack pointer that's pointing at the first character of the string in to $t2
 		add $t6, $a1, $zero   # stores the address of the first character of the string in $t6
 
 insert:
 
-		lb $t1, 0($a1)  						# loads the character from the given address in to $t1
-		beq $t1, $zero, pop_stack   # if $t1 is equal to $zero, jump to the label pop_stack (if the string has reached its end (NULL))
+		lb $s1, 0($a1)  						# loads the character from the given address in to $t1
+		beq $s1, $zero, pop_stack   # if $t1 is equal to $zero, jump to the label pop_stack (if the string has reached its end (NULL))
 		addi $sp, $sp, -1   				# moves the stack pointer down one byte in the memory
-		sb $t1, 0($sp) 							# stores the character in the stack memory where the stack pointer is pointing at
+		sb $s1, 0($sp) 							# stores the character in the stack memory where the stack pointer is pointing at
 		addi $a1, $a1, 1						# Increment the address of the string by one byte (Moves to the next character in the string)
 
 		j insert										# Jump to the label insert
 
 pop_stack:
 
-		beq $t2, $sp, reverse_end   # if the current character has the same address as $t2, jump to the label reverse_end ($sp is then pointing at the bottom of the stack)
-		lb $t4, 0($sp)						  # loads the character that the stack pointer is pointing at in to $t4
-		sb $t4, 0($t0)							# stores the character in $t4 in to the memory address $t0
+		beq $s2, $sp, reverse_end   # if the current character has the same address as $t2, jump to the label reverse_end ($sp is then pointing at the bottom of the stack)
+		lb $s4, 0($sp)						  # loads the character that the stack pointer is pointing at in to $t4
+		sb $s4, 0($s0)							# stores the character in $t4 in to the memory address $t0
 		addi $sp, $sp, 1						# moves the stack pointer one byte
-		addi $t0, $t0, 1						# increases the memory address by one byte
+		addi $s0, $s0, 1						# increases the memory address by one byte
 
 		j pop_stack									# jumpts to the label reverse_end
 
