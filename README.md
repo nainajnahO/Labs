@@ -1,4 +1,4 @@
-# Labs
+# MIPS Pipeline Lab
 
 Coursework for **Computer Architecture (DARK)** — course 1DT038, Uppsala University, Spring 2022.
 
